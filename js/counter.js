@@ -1,15 +1,13 @@
 let counters = [];
 
-const increment = (event) => {
-  let id = event.target.getAttribute("data-name");
+const increment = (id) => () => {
   if (counters[id].value < counters[id].maxValue) {
     counters[id].value++;
   }
   showCounters();
 }
 
-const decrement = (event) => {
-  let id = event.target.getAttribute("data-name");
+const decrement = (id) => () => {
   if (counters[id].value > counters[id].minValue) {
     counters[id].value--;
     showCounters();
@@ -35,12 +33,12 @@ const showCounters = () => {
 
   let incrElements = document.getElementsByClassName('increment')
   for (let x = 0; x < incrElements.length; x++) {
-    incrElements[x].addEventListener('click', increment);
+    incrElements[x].addEventListener('click', increment(x));
   }
 
   let decrElements = document.getElementsByClassName('decrement')
   for (let x = 0; x < decrElements.length; x++) {
-    decrElements[x].addEventListener('click', decrement);
+    decrElements[x].addEventListener('click', decrement(x));
   }
 }
 
@@ -48,10 +46,10 @@ const addCounter = () => {
   let minValue = document.getElementById('minValue').value;
   let maxValue = document.getElementById('maxValue').value;
 
-  if(minValue === '') minValue = 0
-  if(maxValue === '') maxValue = 10
+  if (minValue === '') minValue = 0
+  if (maxValue === '') maxValue = 10
 
-  if(maxValue > minValue) {
+  if (maxValue > minValue) {
     counters[counters.length] = {
       value: minValue,
       minValue: minValue,
@@ -61,10 +59,16 @@ const addCounter = () => {
   } else document.getElementById('error').innerHTML = 'min value <= max value'
 
   showCounters();
-  console.log(counters)
 }
 
 document.getElementById('add_counter').addEventListener('click', addCounter);
 showCounters();
 
-addCounter()
+
+const testCounter = () => {
+  addCounter()
+  console.log(counters[0].value) // 0
+  increment(0)()
+  console.log(counters[0].value) // 1
+}
+// testCounter()
